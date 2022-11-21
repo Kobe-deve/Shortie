@@ -177,7 +177,7 @@ function onload()
 	
 	// set up assets
 	sprite = new Image();
-	sprite.src = "Shortie.png";
+	sprite.src = "img/Shortie.PNG";
 	
 	y = window.innerHeight*2/3;
 	
