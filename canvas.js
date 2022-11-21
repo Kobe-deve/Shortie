@@ -15,6 +15,8 @@ var friction = 0.25;
 var xacceleration = 0;
 var yacceleration = 0;
 
+var jump = false;
+
 var movement = false;
 
 // frame on animation
@@ -57,6 +59,10 @@ function keyInput(event){
 			if(xacceleration <= 0)
 				xacceleration++;
 		break;
+		case " ":
+			jump = true;
+			yacceleration-=10;
+		break;
 		/*case "ArrowUp":
 			if(yacceleration >= 0)
 				yacceleration--;
@@ -74,16 +80,16 @@ function setWindowSize()
 	canvas.width = window.innerWidth;
 	canvas.height = window.innerHeight;
 	
+	y = window.innerHeight*2/3;
 	draw();
 }
 
 function physics()
 {
-	// movement physics
-	if(Math.abs(xacceleration) > 0 || Math.abs(yacceleration) > 0)
+	// x movement physics
+	if(Math.abs(xacceleration) > 0)
 	{
 		xspeed+=xacceleration/2;
-		yspeed+=yacceleration/2;
 	
 		movement = true;
 	}
@@ -94,15 +100,21 @@ function physics()
 		else if(xspeed > 0)
 			xspeed-=friction;
 		
-		if(xspeed < 0)
-			xspeed+=friction;
-		else if(xspeed > 0)
-			xspeed-=friction;
-		
 		movement = false;
 	}
-
-	y+=yspeed;
+	
+	//y movement/jump physics
+	if(yacceleration < 0)
+	{
+		yacceleration = yacceleration+1;
+	}
+	else if(yacceleration == 0 && jump && y < window.innerHeight*2/3)
+	{
+		yacceleration = yacceleration+2;	
+	}
+	
+	if(jump)
+		y+=2*yacceleration;
 	x+=xspeed;
 	
 	// check boundaries
@@ -166,6 +178,8 @@ function onload()
 	// set up assets
 	sprite = new Image();
 	sprite.src = "Shortie.png";
+	
+	y = window.innerHeight*2/3;
 	
 	// set up main loop
 	window.requestAnimationFrame(mainLoop);
