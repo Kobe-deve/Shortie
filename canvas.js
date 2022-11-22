@@ -11,6 +11,9 @@ var y = 10;
 var playerWidth = 66;
 var playerHeight = 94;
 
+// rotating the player 
+var angle = 0;
+
 // physics 
 var xspeed = 0;
 var yspeed = 0;
@@ -34,7 +37,13 @@ var sprite = null;
 // display the player 
 function displayPlayer()
 {	
-	if(movement)
+	if(jump2)
+	{
+		ctx.translate(x+playerWidth/2,y+playerHeight/2);
+		ctx.rotate(angle * Math.PI / 180);
+		ctx.translate(-x-playerWidth/2,-y-playerHeight/2);
+	}
+	else if(movement)
 	{
 		frame++;
 		frame%=3;
@@ -53,6 +62,7 @@ function displayPlayer()
 		ctx.drawImage(sprite,frame*playerWidth,0,playerWidth,playerHeight,x,y,playerWidth,playerHeight);
 	}
 	
+	ctx.resetTransform();
 }
 
 // displaying to the screen 
@@ -152,6 +162,12 @@ function physics()
 		y+=2*yacceleration;
 	x+=xspeed;
 	
+	if(jump2)
+	{
+		angle+=20;
+		angle%=360;
+	}
+
 	// check boundaries
 	if(y < 0)
 	{
