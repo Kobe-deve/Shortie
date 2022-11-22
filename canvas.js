@@ -8,6 +8,9 @@ var ctx = null;
 var x = 10;
 var y = 10;
 
+var playerWidth = 66;
+var playerHeight = 94;
+
 // physics 
 var xspeed = 0;
 var yspeed = 0;
@@ -42,12 +45,12 @@ function displayPlayer()
 	if(direction == 1) // handles which direction the player is facing 
 	{
 		ctx.scale(-1,1);
-		ctx.drawImage(sprite,frame*133,0,133,217,-x-133,y,133,217);
+		ctx.drawImage(sprite,frame*playerWidth,0,playerWidth,playerHeight,-x-playerWidth,y,playerWidth,playerHeight);
 		ctx.scale(-1, 1);
 	}
 	else
 	{
-		ctx.drawImage(sprite,frame*133,0,133,217,x,y,133,217);
+		ctx.drawImage(sprite,frame*playerWidth,0,playerWidth,playerHeight,x,y,playerWidth,playerHeight);
 	}
 	
 }
@@ -60,7 +63,12 @@ function draw()
 	displayPlayer();
 }
 
-function keyInput(event){
+function keyupInput(event){
+	
+};
+
+
+function keydownInput(event){
 	
 	down = false;
 	switch (event.key) 
@@ -152,11 +160,11 @@ function physics()
 		yspeed = 0;
 		y = 0;	
 	}
-	else if(y+ 217 >= window.innerHeight)
+	else if(y >= window.innerHeight*2/3)
 	{
 		yacceleration = 0;
 		yspeed = 0;
-		y = window.innerHeight-217;
+		y = window.innerHeight*2/3;
 		jump = false;
 		jump2 = false;
 	}
@@ -165,15 +173,15 @@ function physics()
 	{
 		movement = false;
 		xacceleration = 0;
-		xspeed = 0;
+		xspeed = -xspeed;
 		x = 0;
 	}
-	else if(x+133 >= window.innerWidth)
+	else if(x+playerWidth >= window.innerWidth)
 	{
 		movement = false;
 		xacceleration = 0;
-		xspeed = 0;
-		x = window.innerWidth-133;
+		xspeed = -xspeed;
+		x = window.innerWidth-playerWidth;
 	}
 }
 
@@ -200,7 +208,9 @@ function onload()
 	ctx = canvas.getContext("2d");
 	
 	// set handlers for inputs
-	document.onkeydown = keyInput;
+	document.onkeydown = keydownInput;
+	document.onkeyup = keyupInput;
+	
 	window.addEventListener("resize",setWindowSize);
 	
 	// set up assets
