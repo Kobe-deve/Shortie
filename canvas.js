@@ -15,6 +15,8 @@ var friction = 0.25;
 var xacceleration = 0;
 var yacceleration = 0;
 
+var direction = 0;
+
 var jump = false;
 
 var movement = false;
@@ -36,7 +38,17 @@ function displayPlayer()
 	else 
 		frame = 1;
 	
-	ctx.drawImage(sprite,frame*133,0,133,217,x,y,133,217);
+	if(direction == 1) // handles which direction the player is facing 
+	{
+		ctx.scale(-1,1);
+		ctx.drawImage(sprite,frame*133,0,133,217,-x-133,y,133,217);
+		ctx.scale(-1, 1);
+	}
+	else
+	{
+		ctx.drawImage(sprite,frame*133,0,133,217,x,y,133,217);
+	}
+	
 }
 
 // displaying to the screen 
@@ -54,14 +66,19 @@ function keyInput(event){
 		case "ArrowLeft":
 			if(xacceleration >= 0)
 				xacceleration--;
+			direction = 1;
 		break;
 		case "ArrowRight":
 			if(xacceleration <= 0)
 				xacceleration++;
+			direction = 0;
 		break;
 		case " ":
+		if(yacceleration >= -10)
+		{
 			jump = true;
 			yacceleration-=10;
+		}
 		break;
 		/*case "ArrowUp":
 			if(yacceleration >= 0)
@@ -100,7 +117,8 @@ function physics()
 		else if(xspeed > 0)
 			xspeed-=friction;
 		
-		movement = false;
+		if(xspeed == 0)
+			movement = false;
 	}
 	
 	//y movement/jump physics
