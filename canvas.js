@@ -18,6 +18,7 @@ var yacceleration = 0;
 var direction = 0;
 
 var jump = false;
+var jump2 = false;
 
 var movement = false;
 
@@ -61,6 +62,7 @@ function draw()
 
 function keyInput(event){
 	
+	down = false;
 	switch (event.key) 
 	{
 		case "ArrowLeft":
@@ -73,21 +75,25 @@ function keyInput(event){
 				xacceleration++;
 			direction = 0;
 		break;
-		case " ":
-		if(yacceleration >= -10)
+		case "ArrowDown":
+			yacceleration+=4;
+		break;
+	}
+	
+	// jump handling
+	if(event.key == " ")
+	{
+		if(!jump)
 		{
 			jump = true;
-			yacceleration-=10;
+			yacceleration-=15;
 		}
-		break;
-		/*case "ArrowUp":
-			if(yacceleration >= 0)
-				yacceleration--;
-		break;
-		case "ArrowDown":
-			if(yacceleration <= 0)
-				yacceleration++;
-		break;*/
+		else if(!jump2)
+		{
+			jump2 = true;
+			yacceleration-=6;
+			
+		}
 	}
 };
 
@@ -106,7 +112,7 @@ function physics()
 	// x movement physics
 	if(Math.abs(xacceleration) > 0)
 	{
-		xspeed+=xacceleration/2;
+		xspeed+=xacceleration/4;
 	
 		movement = true;
 	}
@@ -128,10 +134,13 @@ function physics()
 	}
 	else if(yacceleration == 0 && jump && y < window.innerHeight*2/3)
 	{
-		yacceleration = yacceleration+2;	
+		if(!jump2)
+			yacceleration = yacceleration+4;	
+		else
+			yacceleration = yacceleration+1;		
 	}
 	
-	if(jump)
+	if(jump || jump2)
 		y+=2*yacceleration;
 	x+=xspeed;
 	
@@ -145,10 +154,11 @@ function physics()
 	}
 	else if(y+ 217 >= window.innerHeight)
 	{
-		movement = false;
 		yacceleration = 0;
 		yspeed = 0;
 		y = window.innerHeight-217;
+		jump = false;
+		jump2 = false;
 	}
 	
 	if(x < 0)
