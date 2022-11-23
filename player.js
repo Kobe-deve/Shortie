@@ -17,6 +17,8 @@ class Player
 	xacceleration = 0;
 	yacceleration = 0;
 
+	holdCounter = 0;
+	
 	direction = 0;
 
 	jump = false;
@@ -41,38 +43,57 @@ class Player
 	// handling input 
 	keydownInput(event){
 		this.down = false;
-				
-		switch (event.key) 
-		{
-			case "ArrowLeft":
-				if(this.xacceleration >= 0)
-					this.xacceleration--;
-				this.direction = 1;
-			break;
-			case "ArrowRight":
-				if(this.xacceleration <= 0)
-					this.xacceleration++;
-				this.direction = 0;
-			break;
-			case "ArrowDown":
-				this.yacceleration+=4;
-			break;
+		
+		// x axis moving 
+		if(event.type == 'keydown') 	
+		{		
+			switch (event.key) 
+			{
+				case "ArrowLeft":
+					if(this.xacceleration >= 0)
+						this.xacceleration--;
+					this.direction = 1;
+				break;
+				case "ArrowRight":
+					if(this.xacceleration <= 0)
+						this.xacceleration++;
+					this.direction = 0;
+				break;
+				case "ArrowDown":
+					this.yacceleration+=4;
+				break;
+			}
 		}
-	
+
 		// jump handling
 		if(event.key == " ")
 		{
-			if(!this.jump)
+			if(event.type == 'keydown') 	
+			{		
+				if(this.jump && !this.jump2)
+				{
+					this.jump2 = true;
+					this.yacceleration -=10;
+				}
+				else if(!this.jump && Math.pow(this.holdCounter-3,2) != 0)	
+				{
+					this.holdCounter++;
+					this.yacceleration -= Math.pow(this.holdCounter-3,2);
+					console.log(Math.pow(this.holdCounter-3,2));
+				}
+				else
+				{
+					this.yacceleration = 0;
+					this.holdCounter = 0;
+				}
+			}
+			else if(event.type == 'keyup') 	
 			{
+				this.holdCounter = 0;
 				this.jump = true;
-				this.yacceleration-=15;
-			}
-			else if(!this.jump2)
-			{
-				this.jump2 = true;
-				this.yacceleration-=6;
-			
-			}
+				this.yacceleration = 0;
+				
+			}				
 		}
 	};
 	
@@ -113,75 +134,70 @@ class Player
 		// x movement physics
 	    if(Math.abs(this.xacceleration) > 0)
 	    {
-	        	this.xspeed+=this.xacceleration/4;
+	        this.xspeed+=this.xacceleration/4;
 	
-		        this.movement = true;
-	        }
-	        else
-	        {
-		        if(this.xspeed < 0)
-			        this.xspeed+=this.friction;
-        		else if(this.xspeed > 0)
-		        	this.xspeed-=this.friction;
+		    this.movement = true;
+	    }
+	    else
+	    {
+		    if(this.xspeed < 0)
+			    this.xspeed+=this.friction;
+			else if(this.xspeed > 0)
+		        this.xspeed-=this.friction;
 		
-	        	if(this.xspeed == 0)
-			        this.movement = false;
-	        }
+	        if(this.xspeed == 0)
+			    this.movement = false;
+	    }
 	
-	        //y movement/jump physics
-	        if(this.yacceleration < 0)
-	        {
+	    //y movement/jump physics
+		if(this.yacceleration == 0 && this.y < window.innerHeight*2/3)
+	    {
+	    	if(!this.jump2)
+		        this.yacceleration = this.yacceleration+4;
+		    else
 		        this.yacceleration = this.yacceleration+1;
-	        }
-	        else if(this.yacceleration == 0 && this.jump && this.y < window.innerHeight*2/3)
-	        {
-	        	if(!this.jump2)
-			        this.yacceleration = this.yacceleration+4;
-		        else
-			        this.yacceleration = this.yacceleration+1;
-	        }
+	    }
+		
+		this.y+=2*this.yacceleration;
+	    this.x+=this.xspeed;
 	
-	        if(this.jump || this.jump2)
-		        this.y+=2*this.yacceleration;
-	        this.x+=this.xspeed;
-	
-	        if(this.jump2)
-	        {
-		        this.angle+=20;
-		        this.angle%=360;
-	        }
+	    if(this.jump2)
+	    {
+		    this.angle+=20;
+		    this.angle%=360;
+	    }
 
-        	// check boundaries
-	        if(this.y < 0)
-	        {
-		        this.movement = false;
-		        this.yacceleration = 0;
-		        this.yspeed = 0;
-		        this.y = 0;
-	        }
-	        else if(this.y >= window.innerHeight*2/3)
-	        {
-		        this.yacceleration = 0;
-		        this.yspeed = 0;
-		        this.y = window.innerHeight*2/3;
-		        this.jump = false;
-		        this.jump2 = false;
-	        }
+		// check boundaries
+	    if(this.y < 0)
+	    {
+		    this.movement = false;
+		    this.yacceleration = 0;
+		    this.yspeed = 0;
+		    this.y = 0;
+	    }
+	    else if(this.y >= window.innerHeight*2/3)
+	    {
+		    this.yacceleration = 0;
+		    this.yspeed = 0;
+		    this.y = window.innerHeight*2/3;
+		    this.jump = false;
+		    this.jump2 = false;
+	    }
 	
-	        if(this.x < 0)
-	        {
-		        this.movement = false;
-		        this.xacceleration = 0;
-		        this.xspeed = -this.xspeed;
-		        this.x = 0;
-	        }
-	        else if(this.x+this.playerWidth >= window.innerWidth)
-	        {
-		        this.movement = false;
-		        this.xacceleration = 0;
-		        this.xspeed = -this.xspeed;
-		        this.x = window.innerWidth-this.playerWidth;
-        	}
+	    if(this.x < 0)
+	    {
+		    this.movement = false;
+		    this.xacceleration = 0;
+		    this.xspeed = -this.xspeed;
+		    this.x = 0;
+	    }
+	    else if(this.x+this.playerWidth >= window.innerWidth)
+	    {
+		    this.movement = false;
+		    this.xacceleration = 0;
+		    this.xspeed = -this.xspeed;
+		    this.x = window.innerWidth-this.playerWidth;
+        }
 	};
 	
 	// setting y based on resized screen 

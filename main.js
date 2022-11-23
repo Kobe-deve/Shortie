@@ -17,7 +17,9 @@ function onload()
 
 	// set handlers for inputs
 	document.onkeydown = inputHandler;	
-
+	document.onkeyup = inputHandler;	
+	
+	
 	// set up main loop
 	window.requestAnimationFrame(mainLoop);
 	
@@ -32,6 +34,7 @@ function setWindowSize()
 	canvas.height = window.innerHeight;
 }
 
+// handles all keyboard input 
 function inputHandler(event){
 	playerCharacter.keydownInput(event);
 }
