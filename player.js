@@ -75,11 +75,10 @@ class Player
 					this.jump2 = true;
 					this.yacceleration -=10;
 				}
-				else if(!this.jump && Math.pow(this.holdCounter-3,2) != 0)	
+				else if(!this.jump && Math.pow(this.holdCounter-3,2) > 0)	
 				{
 					this.holdCounter++;
 					this.yacceleration -= Math.pow(this.holdCounter-3,2);
-					console.log(Math.pow(this.holdCounter-3,2));
 				}
 				else
 				{
