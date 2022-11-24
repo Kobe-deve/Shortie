@@ -2,12 +2,14 @@ class Map
 {
 
 	map = [[1,0,0,0,0,],
-			   [0,0,0,0,0,],
-			   [0,0,1,0,1,],
-			   [0,0,1,1,1,]]
+			   [1,0,0,0,0,],
+			   [1,0,1,0,1,],
+			   [1,0,1,0,1,]]
 	
 	width = 5;
 	height = 4;
+	
+	blockSize = 100;
 	
 	// draws map on screen 	
 	draw()
@@ -18,9 +20,9 @@ class Map
 			for(var x = 0;x < this.width;x++)
 			{
 				if(this.map[y][x] == 1)
-					ctx.rect(x*100, y*100, 100, 100);
+					ctx.rect(x*this.blockSize, y*this.blockSize, this.blockSize, this.blockSize);
 				else if (this.map[y][x] == 2)
-					ctx.fillRect(x*100, y*100, 100, 100);
+					ctx.fillRect(x*this.blockSize, y*this.blockSize, this.blockSize, this.blockSize);
 			}
 		}
 		ctx.stroke();
@@ -29,11 +31,11 @@ class Map
 	// collision detection...
 	blockat(x,y)
 	{
-		if(x/100 < this.width && y/100 < this.height)
+		if(x/this.blockSize < this.width && y/this.blockSize < this.height)
 		{
-			if(this.map[parseInt(y/100)][parseInt(x/100)] == 1)
+			if(this.map[parseInt(y/this.blockSize)][parseInt(x/this.blockSize)] >= 1)
 			{
-			//	this.map[parseInt(y/100)][parseInt(x/100)] = 2;
+				this.map[parseInt(y/this.blockSize)][parseInt(x/this.blockSize)] = 2;
 				return true;
 			}
 		}
