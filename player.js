@@ -60,6 +60,8 @@ class Player
 					this.direction = 0;
 				break;
 				case "ArrowDown":
+				if(!(testMap.blockat(this.x,this.y+this.playerHeight) || testMap.blockat(this.x+this.playerWidth,this.y+this.playerHeight)
+				   || testMap.blockat(this.x,this.y) || testMap.blockat(this.x+this.playerWidth,this.y+this.playerHeight)))
 					this.yacceleration+=4;
 				break;
 			}
@@ -182,7 +184,7 @@ class Player
 			if(this.y >= window.innerHeight*2/3)
 				this.y = window.innerHeight*2/3;
 			else
-				this.y = this.y;
+				this.y = parseInt(this.y/testMap.blockSize)*testMap.blockSize;
 		    this.jump = false;
 		    this.jump2 = false;
 	    }
@@ -194,6 +196,8 @@ class Player
 		    this.xacceleration = 0;
 			if(this.x < 0)
 				this.x = 0;
+			else 
+				 this.x = parseInt(this.x/testMap.blockSize+1)*testMap.blockSize
 	    }
 	    else if(this.x+this.playerWidth >= window.innerWidth  || testMap.blockat(this.x+this.playerWidth,this.y) || testMap.blockat(this.x+this.playerWidth,this.y+this.playerHeight))
 	    {
@@ -201,7 +205,7 @@ class Player
 		    this.xacceleration = 0;
 		    this.xspeed = -this.xspeed;
 			if(this.x+this.playerWidth >= window.innerWidth)
-				this.x = window.innerWidth-this.playerWidth;
+				this.x = parseInt(this.x/testMap.blockSize)*testMap.blockSize
         }
 	};
 	
