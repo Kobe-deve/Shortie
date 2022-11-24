@@ -1,5 +1,3 @@
-var playerCharacter;
-
 // initialize game 
 function onload()
 {
@@ -14,6 +12,8 @@ function onload()
 	
 	// set up player 
 	playerCharacter = new Player()
+
+	testMap = new Map();
 
 	// set handlers for inputs
 	document.onkeydown = inputHandler;	
@@ -39,18 +39,26 @@ function inputHandler(event){
 	playerCharacter.keydownInput(event);
 }
 
+// handles in-game logic 
+function logicHandling()
+{
+	playerCharacter.physics();
+}
+
 // displaying to the screen 
 function draw()
 {	
 	// clear screen
 	ctx.clearRect(0, 0, canvas.width, canvas.height);
+	testMap.draw();
+	
 	playerCharacter.draw();
 }
 
 // main loop 
 function mainLoop(){
-	
-	playerCharacter.physics();
+	// process player movment/ai/etc 
+	logicHandling();
 	
 	// display to screen 
 	draw();

@@ -149,7 +149,7 @@ class Player
 	    }
 	
 	    //y movement/jump physics
-		if(this.yacceleration == 0 && this.y < window.innerHeight*2/3)
+		if(this.yacceleration == 0 && this.y < window.innerHeight*2/3 && !testMap.blockat(this.x,this.y+this.playerHeight))
 	    {
 	    	if(!this.jump2)
 		        this.yacceleration = this.yacceleration+4;
@@ -167,35 +167,41 @@ class Player
 	    }
 
 		// check boundaries
-	    if(this.y < 0)
+	    if(this.y < 0 || testMap.blockat(this.x,this.y))
 	    {
 		    this.movement = false;
 		    this.yacceleration = 0;
 		    this.yspeed = 0;
-		    this.y = 0;
+		    if(this.y < 0)
+				this.y = 0;
 	    }
-	    else if(this.y >= window.innerHeight*2/3)
+	    else if(this.y >= window.innerHeight*2/3 || testMap.blockat(this.x,this.y+this.playerHeight))
 	    {
 		    this.yacceleration = 0;
 		    this.yspeed = 0;
-		    this.y = window.innerHeight*2/3;
+			if(this.y >= window.innerHeight*2/3)
+				this.y = window.innerHeight*2/3;
+			else
+				this.y = this.y;
 		    this.jump = false;
 		    this.jump2 = false;
 	    }
 	
-	    if(this.x < 0)
+	    if(this.x < 0 || testMap.blockat(this.x,this.y))
 	    {
+		    this.xspeed = -this.xspeed;
 		    this.movement = false;
 		    this.xacceleration = 0;
-		    this.xspeed = -this.xspeed;
-		    this.x = 0;
+			if(this.x < 0)
+				this.x = 0;
 	    }
-	    else if(this.x+this.playerWidth >= window.innerWidth)
+	    else if(this.x+this.playerWidth >= window.innerWidth  || testMap.blockat(this.x+this.playerWidth,this.y))
 	    {
 		    this.movement = false;
 		    this.xacceleration = 0;
 		    this.xspeed = -this.xspeed;
-		    this.x = window.innerWidth-this.playerWidth;
+			if(this.x+this.playerWidth >= window.innerWidth)
+				this.x = window.innerWidth-this.playerWidth;
         }
 	};
 	
