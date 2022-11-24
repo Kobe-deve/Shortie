@@ -196,8 +196,8 @@ class Player
 		    this.xacceleration = 0;
 			if(this.x < 0)
 				this.x = 0;
-			else 
-				 this.x = parseInt(this.x/testMap.blockSize+1)*testMap.blockSize
+			//else
+			//	this.x = parseInt(this.x/testMap.blockSize+1)*testMap.blockSize;
 	    }
 	    else if(this.x+this.playerWidth >= window.innerWidth  || testMap.blockat(this.x+this.playerWidth,this.y) || testMap.blockat(this.x+this.playerWidth,this.y+this.playerHeight))
 	    {
@@ -205,6 +205,8 @@ class Player
 		    this.xacceleration = 0;
 		    this.xspeed = -this.xspeed;
 			if(this.x+this.playerWidth >= window.innerWidth)
+				this.x = window.innerWidth-this.playerWidth;
+			else
 				this.x = parseInt(this.x/testMap.blockSize)*testMap.blockSize
         }
 	};
