@@ -1,0 +1,7 @@
+-tweak physics/fix bugs
+-add process to move through a stage from beginning to end
+-tweak physics/fix bugs
+-make stage builder/reader
+-tweak physics/fix bugs
+-brainstorm/test 2 powerups
+-tweak physics/fix bugs

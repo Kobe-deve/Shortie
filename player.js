@@ -37,7 +37,8 @@ class Player
 		this.sprite = new Image();
 		this.sprite.src = "img/Shortie.PNG";
 		
-		this.y = window.innerHeight*2/3;
+		this.x = (1)*testMap.blockSize;
+		this.y = (testMap.height-2)*testMap.blockSize;
 	};
 	
 	// handling input 
@@ -93,7 +94,6 @@ class Player
 				this.holdCounter = 0;
 				this.jump = true;
 				this.yacceleration = 0;
-				
 			}				
 		}
 	};
@@ -151,7 +151,7 @@ class Player
 	    }
 	
 	    //y movement/jump physics
-		if(this.yacceleration == 0 && this.y < window.innerHeight*2/3 && !testMap.blockat(this.x,this.y+this.playerHeight))
+		if(this.yacceleration == 0 && this.y < gameplayBoxH+gameplayBoxY && !testMap.blockat(this.x,this.y+this.playerHeight))
 	    {
 	    	if(!this.jump2)
 		        this.yacceleration = this.yacceleration+4;
@@ -177,12 +177,12 @@ class Player
 		    if(this.y < 0)
 				this.y = 0;
 	    }
-	    else if(this.y >= window.innerHeight*2/3 || testMap.blockat(this.x,this.y+this.playerHeight) || testMap.blockat(this.x+this.playerWidth,this.y+this.playerHeight))
+	    else if(this.y >= gameplayBoxH+gameplayBoxY || testMap.blockat(this.x,this.y+this.playerHeight) || testMap.blockat(this.x+this.playerWidth,this.y+this.playerHeight))
 	    {
 		    this.yacceleration = 0;
 		    this.yspeed = 0;
-			if(this.y >= window.innerHeight*2/3)
-				this.y = window.innerHeight*2/3;
+			if(this.y >= gameplayBoxH+gameplayBoxY)
+				this.y = gameplayBoxH+gameplayBoxY
 			else
 				this.y = parseInt(this.y/testMap.blockSize)*testMap.blockSize;
 		    this.jump = false;
@@ -199,16 +199,19 @@ class Player
 			//else
 			//	this.x = parseInt(this.x/testMap.blockSize+1)*testMap.blockSize;
 	    }
-	    else if(this.x+this.playerWidth >= window.innerWidth  || testMap.blockat(this.x+this.playerWidth,this.y) || testMap.blockat(this.x+this.playerWidth,this.y+this.playerHeight))
+	    else if(testMap.blockat(this.x+this.playerWidth,this.y) || testMap.blockat(this.x+this.playerWidth,this.y+this.playerHeight))
 	    {
 		    this.movement = false;
 		    this.xacceleration = 0;
 		    this.xspeed = -this.xspeed;
-			if(this.x+this.playerWidth >= window.innerWidth)
-				this.x = window.innerWidth-this.playerWidth;
-			else
-				this.x = parseInt(this.x/testMap.blockSize)*testMap.blockSize
+			this.x = parseInt(this.x/testMap.blockSize)*testMap.blockSize;
         }
+		else if(this.x+this.playerWidth >= gameplayBoxW+gameplayBoxX)
+		{
+			testMap.currentMap++;
+			this.x = (1)*testMap.blockSize;
+		}
+		
 	};
 	
 	// setting y based on resized screen 

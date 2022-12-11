@@ -10,10 +10,10 @@ function onload()
 	
 	window.addEventListener("resize",setWindowSize);
 	
+	testMap = new Map();
+
 	// set up player 
 	playerCharacter = new Player()
-
-	testMap = new Map();
 
 	// set handlers for inputs
 	document.onkeydown = inputHandler;	
