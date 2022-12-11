@@ -78,13 +78,14 @@ class Player
 					this.jump2 = true;
 					this.yacceleration -=10;
 				}
-				else if(!this.jump && Math.pow(this.holdCounter-3,2) > 0)	
+				else if(!this.jump && this.holdCounter < 3)	
 				{
 					this.holdCounter++;
 					this.yacceleration -= Math.pow(this.holdCounter-3,2);
 				}
 				else
-				{
+				{ 
+					this.jump = true;
 					this.yacceleration = 0;
 					this.holdCounter = 0;
 				}
@@ -189,7 +190,7 @@ class Player
 		    this.jump2 = false;
 	    }
 	
-	    if(this.x < 0 || testMap.blockat(this.x,this.y) || testMap.blockat(this.x,this.y+this.playerHeight))
+	    if(testMap.blockat(this.x,this.y) || testMap.blockat(this.x,this.y+this.playerHeight))
 	    {
 		    this.xspeed = -this.xspeed;
 		    this.movement = false;
@@ -199,6 +200,11 @@ class Player
 			//else
 			//	this.x = parseInt(this.x/testMap.blockSize+1)*testMap.blockSize;
 	    }
+		else if(this.x < 0)
+		{
+			testMap.currentMap--;
+			this.x = (testMap.width-1)*testMap.blockSize;
+		}
 	    else if(testMap.blockat(this.x+this.playerWidth,this.y) || testMap.blockat(this.x+this.playerWidth,this.y+this.playerHeight))
 	    {
 		    this.movement = false;
