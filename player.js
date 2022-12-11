@@ -200,7 +200,7 @@ class Player
 			//else
 			//	this.x = parseInt(this.x/testMap.blockSize+1)*testMap.blockSize;
 	    }
-		else if(this.x < 0)
+		else if(this.x < 0 && testMap.currentMap != 0)
 		{
 			testMap.currentMap--;
 			this.x = (testMap.width-1)*testMap.blockSize;
@@ -212,7 +212,7 @@ class Player
 		    this.xspeed = -this.xspeed;
 			this.x = parseInt(this.x/testMap.blockSize)*testMap.blockSize;
         }
-		else if(this.x+this.playerWidth >= gameplayBoxW+gameplayBoxX)
+		else if(this.x+this.playerWidth >= gameplayBoxW+gameplayBoxX && testMap.currentMap+1 < testMap.mapSize)
 		{
 			testMap.currentMap++;
 			this.x = (1)*testMap.blockSize;
