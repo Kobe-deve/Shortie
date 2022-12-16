@@ -192,14 +192,17 @@ class Player
 	
 	    if(testMap.blockat(this.x,this.y) || testMap.blockat(this.x,this.y+this.playerHeight))
 	    {
-		    this.xspeed = -this.xspeed;
-		    this.movement = false;
+		    //this.xspeed = -this.xspeed;
+		    this.xspeed = 0;
+			this.movement = false;
 		    this.xacceleration = 0;
 			if(this.x < 0)
 				this.x = 0;
-			//else
-			//	this.x = parseInt(this.x/testMap.blockSize+1)*testMap.blockSize;
-	    }
+			else if(testMap.blockat(this.x,this.y))
+				this.x = parseInt(this.x/testMap.blockSize+1)*testMap.blockSize;
+			else
+				this.x = parseInt(this.x/testMap.blockSize)*testMap.blockSize;
+		}
 		else if(this.x < 0 && testMap.currentMap != 0)
 		{
 			testMap.currentMap--;
@@ -209,7 +212,8 @@ class Player
 	    {
 		    this.movement = false;
 		    this.xacceleration = 0;
-		    this.xspeed = -this.xspeed;
+		    this.xspeed = 0;
+			//this.xspeed = -this.xspeed;
 			this.x = parseInt(this.x/testMap.blockSize)*testMap.blockSize;
         }
 		else if(this.x+this.playerWidth >= gameplayBoxW+gameplayBoxX && testMap.currentMap+1 < testMap.mapSize)
