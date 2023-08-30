@@ -111,6 +111,12 @@ class Player
 	// drawing the character 
 	draw()
 	{
+		/*
+		ctx.beginPath();
+		ctx.rect(this.x, this.y, this.playerWidth, this.playerHeight);
+		ctx.stroke();
+		*/
+		
 		if(this.jump2)
 		{
 			ctx.translate(this.x+this.playerWidth/2,this.y+this.playerHeight/2);
@@ -177,38 +183,15 @@ class Player
 	    }
 
 		// check boundaries
-	    if(this.y < 0 || testMap.blockat(this.x,this.y) || testMap.blockat(this.x+this.playerWidth,this.y))
-	    {
-		    this.movement = false;
-		    this.yacceleration = 0;
-		    this.yspeed = 0;
-		    if(this.y < 0)
-				this.y = 0;
-	    }
-	    else if(this.y >= gameplayBoxH+gameplayBoxY || testMap.blockat(this.x,this.y+this.playerHeight) || testMap.blockat(this.x+this.playerWidth,this.y+this.playerHeight))
-	    {
-		    this.yacceleration = 0;
-		    this.yspeed = 0;
-			if(this.y >= gameplayBoxH+gameplayBoxY)
-				this.y = gameplayBoxH+gameplayBoxY
-			else
-				this.y = parseInt(this.y/testMap.blockSize)*testMap.blockSize;
-		    this.jump = false;
-		    this.jump2 = false;
-	    }
-	
-		if(testMap.blockat(this.x+this.playerWidth,this.y) && testMap.blockat(this.x+this.playerWidth,this.y+this.playerHeight))
+	    if(testMap.blockat(this.x+this.playerWidth,this.y) && testMap.blockat(this.x+this.playerWidth,this.y+this.playerHeight)) // right
 	    {
 		    this.movement = false;
 		    this.xacceleration = 0;
 		    this.xspeed = 0;
 			
 			this.x = parseInt(this.x/testMap.blockSize)*testMap.blockSize;
-			
-			//this.xspeed = -this.xspeed;
-			//this.x = parseInt(this.x/testMap.blockSize)*testMap.blockSize;
         }
-	    else if(testMap.blockat(this.x,this.y) || testMap.blockat(this.x,this.y+this.playerHeight))
+		else if(testMap.blockat(this.x,this.y) && testMap.blockat(this.x,this.y+this.playerHeight)) // left
 	    {
 			this.movement = false;
 		    this.xacceleration = 0;
@@ -220,6 +203,25 @@ class Player
 				this.x = (parseInt(this.x/testMap.blockSize)+0.25)*testMap.blockSize;
 			
 		}
+		else if(this.y < 0 || (testMap.blockat(this.x,this.y) && testMap.blockat(this.x+this.playerWidth,this.y))) // top
+	    {
+		    this.movement = false;
+		    this.yacceleration = 0;
+		    this.yspeed = 0;
+		    if(this.y < 0)
+				this.y = 0;
+	    }
+	    else if(this.y >= gameplayBoxH+gameplayBoxY || (testMap.blockat(this.x,this.y+this.playerHeight) && testMap.blockat(this.x+this.playerWidth,this.y+this.playerHeight))) // bottom
+	    {
+		    this.yacceleration = 0;
+		    this.yspeed = 0;
+			if(this.y >= gameplayBoxH+gameplayBoxY)
+				this.y = gameplayBoxH+gameplayBoxY
+			else
+				this.y = parseInt(this.y/testMap.blockSize)*testMap.blockSize;
+		    this.jump = false;
+		    this.jump2 = false;
+	    }
 		
 		if(this.x < 0 && testMap.currentMap != 0) // move to other section of the map 
 		{
@@ -229,7 +231,7 @@ class Player
 		else if(this.x+this.playerWidth >= gameplayBoxW+gameplayBoxX && testMap.currentMap+1 < testMap.mapSize)
 		{
 			testMap.currentMap++;
-			this.x = (1)*testMap.blockSize;
+			this.x = (0)*testMap.blockSize;
 		}
 		
 		
