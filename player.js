@@ -52,21 +52,30 @@ class Player
 			{
 				case "ArrowLeft":
 					if(this.xacceleration >= 0)
+					{
 						this.xacceleration--;
+						this.movement = true;
+					}
 					this.direction = 1;
 				break;
 				case "ArrowRight":
 					if(this.xacceleration <= 0)
+					{
 						this.xacceleration++;
+						this.movement = true;
+					}
 					this.direction = 0;
 				break;
 				case "ArrowDown":
+				this.movement = false;
 				if(!(testMap.blockat(this.x,this.y+this.playerHeight) || testMap.blockat(this.x+this.playerWidth,this.y+this.playerHeight)
 				   || testMap.blockat(this.x,this.y) || testMap.blockat(this.x+this.playerWidth,this.y+this.playerHeight)))
 					this.yacceleration+=4;
 				break;
 			}
 		}
+		else if(event.type == 'keyup' && (event.key == "ArrowLeft" || event.key == "ArrowRight" ))
+			this.movement = false;
 
 		// jump handling
 		if(event.key == " ")
@@ -119,12 +128,12 @@ class Player
 		if(this.direction == 1) // handles which direction the player is facing 
 		{
 			ctx.scale(-1,1);
-			ctx.drawImage(this.sprite,this.frame*this.playerWidth,0,this.playerWidth,this.playerHeight,-this.x-this.playerWidth,this.y,this.playerWidth,this.playerHeight);
+			ctx.drawImage(this.sprite,this.frame*this.playerWidth,0,this.playerWidth,this.playerHeight,-this.x-this.playerWidth,this.y+this.playerWidth/10,this.playerWidth,this.playerHeight);
 			ctx.scale(-1, 1);
 		}
 		else
 		{
-			ctx.drawImage(this.sprite,this.frame*this.playerWidth,0,this.playerWidth,this.playerHeight,this.x,this.y,this.playerWidth,this.playerHeight);
+			ctx.drawImage(this.sprite,this.frame*this.playerWidth,0,this.playerWidth,this.playerHeight,this.x,this.y+this.playerWidth/10,this.playerWidth,this.playerHeight);
 		}	
 	
 		ctx.resetTransform();
@@ -137,8 +146,6 @@ class Player
 	    if(Math.abs(this.xacceleration) > 0)
 	    {
 	        this.xspeed+=this.xacceleration/4;
-	
-		    this.movement = true;
 	    }
 	    else
 	    {
@@ -190,37 +197,41 @@ class Player
 		    this.jump2 = false;
 	    }
 	
-	    if(testMap.blockat(this.x,this.y) || testMap.blockat(this.x,this.y+this.playerHeight))
-	    {
-		    //this.xspeed = -this.xspeed;
-		    this.xspeed = 0;
-			this.movement = false;
-		    this.xacceleration = 0;
-			if(this.x < 0)
-				this.x = 0;
-			else if(testMap.blockat(this.x,this.y))
-				this.x = parseInt(this.x/testMap.blockSize+1)*testMap.blockSize;
-			else
-				this.x = parseInt(this.x/testMap.blockSize)*testMap.blockSize;
-		}
-		else if(this.x < 0 && testMap.currentMap != 0)
-		{
-			testMap.currentMap--;
-			this.x = (testMap.width-1)*testMap.blockSize;
-		}
-	    else if(testMap.blockat(this.x+this.playerWidth,this.y) || testMap.blockat(this.x+this.playerWidth,this.y+this.playerHeight))
+		if(testMap.blockat(this.x+this.playerWidth,this.y) && testMap.blockat(this.x+this.playerWidth,this.y+this.playerHeight))
 	    {
 		    this.movement = false;
 		    this.xacceleration = 0;
 		    this.xspeed = 0;
-			//this.xspeed = -this.xspeed;
+			
 			this.x = parseInt(this.x/testMap.blockSize)*testMap.blockSize;
+			
+			//this.xspeed = -this.xspeed;
+			//this.x = parseInt(this.x/testMap.blockSize)*testMap.blockSize;
         }
+	    else if(testMap.blockat(this.x,this.y) || testMap.blockat(this.x,this.y+this.playerHeight))
+	    {
+			this.movement = false;
+		    this.xacceleration = 0;
+		    this.xspeed = 0;
+			
+			if(testMap.blockat(this.x,this.y))
+				this.x = parseInt(this.x/testMap.blockSize+1)*testMap.blockSize;
+			else
+				this.x = (parseInt(this.x/testMap.blockSize)+0.25)*testMap.blockSize;
+			
+		}
+		
+		if(this.x < 0 && testMap.currentMap != 0) // move to other section of the map 
+		{
+			testMap.currentMap--;
+			this.x = (testMap.width-1)*testMap.blockSize;
+		}
 		else if(this.x+this.playerWidth >= gameplayBoxW+gameplayBoxX && testMap.currentMap+1 < testMap.mapSize)
 		{
 			testMap.currentMap++;
 			this.x = (1)*testMap.blockSize;
 		}
+		
 		
 	};
 	
